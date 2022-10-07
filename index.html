@@ -1,0 +1,202 @@
+<head> </head>
+
+<body>
+  <form id="myForm">
+    <h4>CSV File input:</h4>
+    <input type="file" id="csvFile" accept=".csv" />
+    <br />
+    <h4>PDF File input:</h4>
+    <input type="file" onchange="openFile(event)" accept=".pdf" />
+    <br />
+    <input type="submit" value="Submit" />
+  </form>
+  <!--
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀ 
+⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀ ⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀ 
+⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿⣿⠀ 
+⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀ 
+⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀ 
+⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀ 
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀ 
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀ 
+⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀ 
+⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀ 
+⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀ ⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⠀⢠⣿⣿⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+By Edin Žiga for SFF
+-->
+  <script type="module">
+    //Firebase Initialization -----------------------------------------------------------------------
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      doc,
+      setDoc,
+    } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
+    import {
+      getStorage,
+      ref,
+      uploadBytes,
+      deleteObject,
+    } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-storage.js";
+    const firebaseConfig = {};
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    //------------------------------------------------------------------------------------------------------
+
+    //Prebaci csv podatke u arr objekata
+    const myForm = document.getElementById("myForm");
+    const csvFile = document.getElementById("csvFile");
+    function csvToArray(str, delimiter = ",") {
+      const headers = str.slice(0, str.indexOf("\n") - 1).split(delimiter);
+      const rows = str.slice(str.indexOf("\n") + 1).split("\n");
+      const arr = rows.map(function (row) {
+        const values = row.split(delimiter);
+        const el = headers.reduce(function (object, header, index) {
+          object[header] = values[index];
+          return object;
+        }, {});
+        return el;
+      });
+      return arr;
+    }
+
+    //Sends one name and pin to Firebase
+    function setData(inpname, pin) {
+      setDoc(doc(db, "Users", pin), {
+        Name: inpname,
+      });
+      console.log("Added " + inpname + " at " + pin);
+    }
+
+    //Folder Stuff-----------------------------------------------------------
+    //Saves Uploaded PDF
+    var file = null;
+    window.openFile = (event) => {
+      var input = event.target;
+      file = input.files[0];
+      console.log(file);
+    };
+
+    //Adds a single folder to Storage
+    async function addFolder(fileName, inputFile) {
+      const fileRef = ref(storage, fileName + "/" + inputFile.name);
+      await uploadBytes(fileRef, inputFile)
+        .then((snapshot) => {
+          console.log("Uploaded file - " + fileName);
+        })
+        .catch((error) => {
+          document.write("Upload error for - " + fileName);
+        });
+    }
+
+    //Adds a single folder to Storage with support for numbering
+    async function addFolderWithNum(fileName, inputFile, num) {
+      const fileRef = ref(
+        storage,
+        fileName + "/" + num + " - " + inputFile.name
+      );
+      await uploadBytes(fileRef, inputFile)
+        .then((snapshot) => {
+          console.log("Uploaded file - " + fileName);
+        })
+        .catch((error) => {
+          document.write("Upload error for - " + fileName);
+        });
+    }
+
+    //Removes a single folder from storage
+    async function removeTemp(fileName, inputFile) {
+      const fileRef = ref(storage, fileName + "/" + inputFile.name);
+      await deleteObject(fileRef)
+        .then(() => {
+          console.log("Delete done for - " + fileName);
+        })
+        .catch((error) => {
+          console.log("Delete error for - " + fileName);
+        });
+    }
+
+    //Removes a single folder from storage with numbering
+    async function removeTempWithNum(fileName, inputFile, num) {
+      const fileRef = ref(
+        storage,
+        fileName + "/" + num + " - " + inputFile.name
+      );
+      await deleteObject(fileRef)
+        .then(() => {
+          console.log("Delete done for - " + fileName);
+        })
+        .catch((error) => {
+          console.log("Delete error for - " + fileName);
+        });
+    }
+
+    //Adds or removes all folders based on .csv file, depends on how it's set up
+    async function addAllFolders(inputData) {
+      for (var j = 0; j < inputData.length - 1; j++) {
+        var tempStorage = "";
+        for (let i = 0; i < inputData[j].Pin.length; i++) {
+          tempStorage += inputData[j].Pin[i];
+        }
+        if (j <= 2500) {
+          for (var i = 1; i <= 3; i++) {
+            await addFolderWithNum(tempStorage, file, i);
+          }
+        }
+        if (j > 2500 && j <= 4000) {
+          for (var i = 1; i <= 10; i++) {
+            await addFolderWithNum(tempStorage, file, i);
+          }
+        }
+        if (j > 4000) {
+          for (var i = 1; i <= 50; i++) {
+            await addFolderWithNum(tempStorage, file, i);
+          }
+        }
+      }
+      console.log("Finished Everything");
+    }
+
+    //Kad se pritise submit sta ce se desiti
+    myForm.addEventListener("submit", function (e) {
+      //Iskreno pojma nemam sta ovaj dio radi
+      e.preventDefault();
+      const input = csvFile.files[0];
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const text = e.target.result;
+        const data = csvToArray(text);
+
+        //Skida razmak na kraju Pinova
+        for (let i = 0; i < data.length - 1; i++) {
+          let temp;
+          temp = data[i].Pin;
+          let editedText = temp.slice(0, -1);
+          data[i].Pin = editedText;
+        }
+        /* Sends data to Firebase, DO NOT USE UNLESS ABSOLUTELY SURE
+          FIREBASE WILL BLOCK IF USED TOO MUCH
+        for (let i = 0; i < data.length - 1; i++) {
+          setData(data[i].Name, data[i].Pin);
+        }
+        */
+        //*Adds all folders or removes all folders, depends on how it's set up
+        //Only use if you're 100% sure
+        //addAllFolders(data, file);
+        //document.write(" Upload Started!");
+      };
+      reader.readAsText(input);
+    });
+  </script>
+</body>
